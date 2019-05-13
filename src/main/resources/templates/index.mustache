@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .table-box {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        select::-ms-expand {
+            display: none;
+        }
+
+        select {
+            -webkit-appearance: none;
+            appearance: none;
+            padding: 5px !important;
+        }
+
+        td, th {
+            padding: 0px !important;
+            text-align: center
+        }
+    </style>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <title>TimeSheet</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-sm-12">
+            <h2 style="word-wrap: break-word">Департаменты</h2>
+            <ul class="nav nav-pills nav-stacked">
+                {{#departmentList}}
+                <li><a href="/department/{{id}}">{{name}}</a></li>
+                {{/departmentList}}
+            </ul>
+        </div>
+        {{#currentDepId}}
+        <div class="col-md-6 col-sm-12">
+            <h2>Года</h2>
+            <ul class="nav nav-pills nav-stacked">
+                {{#yearList}}
+                <li><a href="/department/{{currentDepId}}/year/{{id}}">{{name}}</a></li>
+                {{/yearList}}
+            </ul>
+        </div>
+        <div class="col-md-12 col-sm-12">
+            <h2>Месяцы</h2>
+            <ul class="nav nav-tabs">
+                {{#Months}}
+                <li class="{{#isActive}}active{{/isActive}}"><a data-toggle="tab" href="#{{name}}">{{name}}</a></li>
+                {{/Months}}
+            </ul>
+        </div>
+        <div class="col-md-12 col-sm-12">
+            <h2>Табель</h2>
+            <div class="tab-content">
+                {{#Months}}
+                <div id="{{name}}" class="tab-pane fade {{#isActive}} in active {{/isActive}}">
+                    <div class="table-box">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">ФИО</th>
+                                <th scope="col">Долж<br>ность</th>
+                                <th scope="col">Таб<br>№</th>
+
+                                {{#listDays}}
+                                <th scope="col">{{.}}</th>
+                                {{/listDays}}
+                                <th scope="col">Итого</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {{#employeesByMounthDTOS}}
+                            <tr>
+
+                                <td>{{surname}} {{name}} <br> {{patronymic}}</td>
+                                <td>{{position}}</td>
+                                <td>{{id}}</td>
+
+                                {{#workCalendarDaysEntityList}}
+                                <td>
+                                    <select class="form-control" data-path="{{path}}"  onchange="saveSelectes(this);" >
+                                        <option>_</option>
+                                        {{#assassmentList}}
+                                        <option {{#isSelected}}selected{{/isSelected}} value="{{id}}">{{value}}</option>
+                                        {{/assassmentList}}
+                                    </select>
+                                </td>
+                                {{/workCalendarDaysEntityList}}
+
+                                <td>
+                                    {{#result}}
+                                    {{name}}({{count}});
+                                    {{/result}}
+                                </td>
+                            </tr>
+                            {{/employeesByMounthDTOS}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {{/Months}}
+            </div>
+        </div>
+        {{/currentDepId}}
+    </div>
+</div>
+<script>
+    function saveSelectes(selection){
+        console.log(selection);
+        console.log($(selection).attr("data-path")+$(selection).val().toString());
+        $.get(
+            $(selection).attr("data-path")+$(selection).val().toString(),
+            {},
+            function(data) {
+                console.log(data);
+            }
+        );
+    }
+</script>
+</body>
+</html>
