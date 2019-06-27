@@ -152,7 +152,6 @@ public class IndexController {
 	private MonthsDto GetMounthDTO(MonthsEntity month, List<EmployeesByMounthDTO> employeesByMounthDTOS) {
 		MonthsDto dto = modelMapper.map(month, MonthsDto.class);
 
-
 		List<Integer> listDays = new ArrayList<>();
 
 		int max = month.getCountDay();
